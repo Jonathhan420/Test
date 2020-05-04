@@ -8,6 +8,10 @@ import {
 
 @Entity()
 export class User {
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
+  }
+
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -28,8 +32,4 @@ export class User {
 
   @UpdateDateColumn()
   updated: Date;
-
-  consturctor(user: Partial<User>) {
-    Object.assign(this, user);
-  }
 }
