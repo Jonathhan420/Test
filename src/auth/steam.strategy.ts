@@ -15,7 +15,11 @@ export class SteamStrategy extends PassportStrategy(Strategy, "steam") {
     });
   }
 
-  async validate(_identifier: string, profile: any, done: Function): Promise<void> {
+  async validate(
+    _identifier: string,
+    profile: any,
+    done: Function
+  ): Promise<void> {
     try {
       const player: Player = profile._json;
       const token = await this.authService.validateLogin(player);
