@@ -3,8 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   UpdateDateColumn,
-  CreateDateColumn
+  CreateDateColumn,
+  OneToMany
 } from "typeorm";
+import { Comment } from "./comment.entity";
 
 @Entity()
 export class User {
@@ -14,6 +16,12 @@ export class User {
 
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @OneToMany(() => Comment, comment => comment.location)
+  comments: Comment[];
+
+  @OneToMany(() => Comment, comment => comment.author)
+  authoredComments: Comment[];
 
   @Column({ length: 17 })
   steamid: string;
