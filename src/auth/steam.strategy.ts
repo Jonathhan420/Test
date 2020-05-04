@@ -9,7 +9,7 @@ import { AuthService } from "./auth.service";
 export class SteamStrategy extends PassportStrategy(Strategy, "steam") {
   constructor(config: ConfigService, private authService: AuthService) {
     super({
-      returnURL: config.get<string>("API_URL") + "/auth/callback",
+      returnURL: config.get<string>("API_URL") + "/auth/login",
       realm: config.get<string>("API_URL"),
       apiKey: config.get<string>("STEAM_KEY")
     });
