@@ -17,6 +17,7 @@ import { AuthModule } from "./auth/auth.module";
         port: config.get<number>("DB_PORT"),
         username: config.get<string>("DB_USER"),
         password: config.get<string>("DB_PASS"),
+        autoLoadEntities: true,
         database: "development",
         synchronize: true,
 
