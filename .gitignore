@@ -5,6 +5,9 @@
 # secrets
 .env
 
+# cloud sql proxy
+cloud_sql_proxy*
+
 # Logs
 logs
 *.log

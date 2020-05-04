@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "proxy": "./cloud_sql_proxy -instances=skunkswork:us-west1:mvmhub=tcp:3306",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
