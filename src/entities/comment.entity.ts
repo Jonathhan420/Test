@@ -1,4 +1,10 @@
-import { Entity, Column, ManyToOne, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  UpdateDateColumn,
+  CreateDateColumn
+} from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
@@ -7,10 +13,16 @@ export class Comment {
     Object.assign(this, comment);
   }
 
-  @ManyToOne(() => User, user => user.authoredComments)
+  @ManyToOne(
+    () => User,
+    user => user.authoredComments
+  )
   author: User;
 
-  @ManyToOne(() => User, user => user.comments)
+  @ManyToOne(
+    () => User,
+    user => user.comments
+  )
   location: User;
 
   @Column("text")

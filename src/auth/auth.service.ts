@@ -9,7 +9,10 @@ import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private config: ConfigService, private userService: UserService) {}
+  constructor(
+    private config: ConfigService,
+    private userService: UserService
+  ) {}
 
   private readonly JWT_SECRET = this.config.get<string>("JWT_SECRET");
   private readonly FRONT_URL = this.config.get<string>("FRONT_URL");

@@ -17,10 +17,16 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToMany(() => Comment, comment => comment.location)
+  @OneToMany(
+    () => Comment,
+    comment => comment.location
+  )
   comments: Comment[];
 
-  @OneToMany(() => Comment, comment => comment.author)
+  @OneToMany(
+    () => Comment,
+    comment => comment.author
+  )
   authoredComments: Comment[];
 
   @Column({ length: 17 })
