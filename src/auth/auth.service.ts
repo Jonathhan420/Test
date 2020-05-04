@@ -1,14 +1,15 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { Response } from "express";
 import { sign } from "jsonwebtoken";
 
 import { Player } from "src/interfaces/steam/GetPlayerSummaries";
 import { Payload } from "src/interfaces/jwt/Payload";
-import { Response } from "express";
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class AuthService {
-  constructor(private config: ConfigService) {}
+  constructor(private config: ConfigService, private userService: UserService) {}
 
   private readonly JWT_SECRET = this.config.get<string>("JWT_SECRET");
   private readonly FRONT_URL = this.config.get<string>("FRONT_URL");
@@ -17,6 +18,8 @@ export class AuthService {
     try {
       const payload = { steamid: player.steamid } as Payload;
       const token = sign(payload, this.JWT_SECRET, { expiresIn: "7d" });
+
+      await this.userService.upsertUserFromPlayer(player);
 
       return token;
     } catch (error) {
