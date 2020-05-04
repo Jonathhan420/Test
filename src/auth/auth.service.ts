@@ -19,10 +19,11 @@ export class AuthService {
 
   async validateLogin(player: Player): Promise<string> {
     try {
-      const payload = { steamid: player.steamid } as Payload;
+      const { id } = await this.userService.upsertUserFromPlayer(player);
+      const payload = { id, steamid: player.steamid } as Payload;
+
       const token = sign(payload, this.JWT_SECRET, { expiresIn: "7d" });
 
-      await this.userService.upsertUserFromPlayer(player);
 
       return token;
     } catch (error) {
