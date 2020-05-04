@@ -28,4 +28,8 @@ export class User {
 
   @UpdateDateColumn()
   updated: Date;
+
+  consturctor(user: Partial<User>) {
+    Object.assign(this, user);
+  }
 }
