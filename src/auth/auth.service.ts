@@ -24,7 +24,6 @@ export class AuthService {
 
       const token = sign(payload, this.JWT_SECRET, { expiresIn: "7d" });
 
-
       return token;
     } catch (error) {
       throw new InternalServerErrorException(
