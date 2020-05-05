@@ -41,7 +41,7 @@ export class User {
   @Column()
   private: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   created: Date;
 
   @UpdateDateColumn()
