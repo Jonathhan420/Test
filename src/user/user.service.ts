@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -29,5 +29,21 @@ export class UserService {
     }
 
     return this.userRepo.save(user);
+  }
+
+  async getUserBySteamId(steamid: string) {
+    let user: User;
+    try {
+      user = await this.userRepo.findOneOrFail({
+        relations: ["comment"],
+        where: {
+          steamid
+        }
+      });
+    } catch {
+      throw new NotFoundException("User doesn't exist");
+    }
+
+    return user;
   }
 }
