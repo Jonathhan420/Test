@@ -13,9 +13,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     });
   }
 
-  async validate({ steamid }: Payload, done: Function) {
+  async validate(payload: Payload, done: Function) {
     try {
-      done(null, steamid);
+      done(null, payload);
     } catch (err) {
       throw new UnauthorizedException("Invalid token", err.message);
     }
