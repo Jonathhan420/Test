@@ -3,7 +3,8 @@ import {
   Column,
   ManyToOne,
   UpdateDateColumn,
-  CreateDateColumn
+  CreateDateColumn,
+  PrimaryGeneratedColumn
 } from "typeorm";
 import { User } from "./user.entity";
 
@@ -12,6 +13,9 @@ export class Comment {
   constructor(comment: Partial<Comment>) {
     Object.assign(this, comment);
   }
+
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @ManyToOne(
     () => User,
