@@ -11,6 +11,7 @@ import { NewCommentDto } from "./dto/new-comment.dto";
 import { Comment } from "src/entities/comment.entity";
 import { User } from "src/entities/user.entity";
 import { EditCommentDto } from "./dto/edit-comment.dto";
+import { DeleteCommentDto } from "./dto/delete-comment.dto";
 
 @Injectable()
 export class CommentService {
@@ -68,5 +69,30 @@ export class CommentService {
     comment.content = commentDto.content;
 
     return this.commentRepo.save(comment);
+  }
+
+  async deleteComment(commentDto: DeleteCommentDto) {
+    let comment: Comment;
+
+    try {
+      comment = await this.commentRepo.findOneOrFail({
+        relations: ["author"],
+        where: {
+          id: commentDto.id
+        }
+      });
+    } catch {
+      throw new NotFoundException(
+        "Comment doesn't exist or was already deleted."
+      );
+    }
+
+    if (comment.author.id !== commentDto.author)
+      throw new UnauthorizedException(
+        "Only the author can delete their comment."
+      );
+
+    await this.commentRepo.remove(comment);
+    return;
   }
 }

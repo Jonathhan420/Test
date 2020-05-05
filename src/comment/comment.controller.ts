@@ -1,4 +1,12 @@
-import { Controller, UseGuards, Post, Body, Put, Param } from "@nestjs/common";
+import {
+  Controller,
+  UseGuards,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete
+} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 
 import { CommentService } from "./comment.service";
@@ -6,6 +14,7 @@ import { NewCommentDto } from "./dto/new-comment.dto";
 import { User } from "src/decorators/user.decorator";
 import { Payload } from "src/interfaces/jwt/Payload";
 import { EditCommentDto } from "./dto/edit-comment.dto";
+import { DeleteCommentDto } from "./dto/delete-comment.dto";
 
 @Controller("comment")
 @UseGuards(AuthGuard("jwt"))
@@ -27,5 +36,15 @@ export class CommentController {
     comment.id = commentId;
     comment.author = id;
     return this.commentService.editComment(comment);
+  }
+
+  @Delete(":commentId")
+  async deleteComment(
+    @Param("commentId") commentId: string,
+    @User() { id }: Payload
+  ) {
+    const comment: DeleteCommentDto = { author: id, id: commentId };
+
+    return this.commentService.deleteComment(comment);
   }
 }
