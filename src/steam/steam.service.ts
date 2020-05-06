@@ -1,4 +1,9 @@
-import { Injectable, HttpService } from "@nestjs/common";
+import {
+  Injectable,
+  HttpService,
+  NotFoundException,
+  ServiceUnavailableException
+} from "@nestjs/common";
 import { AxiosResponse } from "axios";
 
 import { PlayerSummaries } from "src/interfaces/steam/GetPlayerSummaries";
@@ -11,11 +16,21 @@ export class SteamService {
   private readonly STEAM_KEY = this.config.get<string>("STEAM_KEY");
 
   async getPlayer(steamid: string) {
-    const response: AxiosResponse<PlayerSummaries> = await this.axios
-      .get("/ISteamUser/GetPlayerSummaries/v0002/", {
-        params: { steamids: steamid, key: this.STEAM_KEY }
-      })
-      .toPromise();
+    let response: AxiosResponse<PlayerSummaries>;
+    try {
+      response = await this.axios
+        .get("/ISteamUser/GetPlayerSummaries/v0002/", {
+          params: { steamids: steamid, key: this.STEAM_KEY }
+        })
+        .toPromise();
+    } catch {
+      throw new ServiceUnavailableException(
+        "Steam API is currently unavailable."
+      );
+    }
+
+    if (response.data.response.players.length < 1)
+      throw new NotFoundException("Player doesn't exist.");
 
     return response.data.response.players[0];
   }
