@@ -8,6 +8,7 @@ import { AxiosResponse } from "axios";
 
 import { PlayerSummaries } from "src/interfaces/steam/GetPlayerSummaries";
 import { ConfigService } from "@nestjs/config";
+import { Inventory } from "src/interfaces/steam/Inventory";
 
 @Injectable()
 export class SteamService {
@@ -33,5 +34,25 @@ export class SteamService {
       throw new NotFoundException("Player doesn't exist.");
 
     return response.data.response.players[0];
+  }
+
+  async getInventory(steamid: string) {
+    let response: AxiosResponse<Inventory>;
+    try {
+      response = await this.axios
+        .get("http://steamcommunity.com/inventory/" + steamid + "/440/2", {
+          params: {
+            l: "english",
+            count: 3000
+          }
+        })
+        .toPromise();
+    } catch {
+      throw new ServiceUnavailableException(
+        "Steam API is currently unavailable."
+      );
+    }
+
+    return response;
   }
 }
