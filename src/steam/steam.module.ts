@@ -1,18 +1,11 @@
 import { Module, HttpModule } from "@nestjs/common";
 
 import { SteamService } from "./steam.service";
-import { ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
-    HttpModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        baseURL: "http://api.steampowered.com/",
-        params: {
-          key: config.get<string>("STEAM_KEY")
-        }
-      })
+    HttpModule.register({
+      baseURL: "http://api.steampowered.com/"
     })
   ],
   exports: [SteamService],
