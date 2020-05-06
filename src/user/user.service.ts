@@ -1,13 +1,17 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { User } from "src/entities/user.entity";
 import { Player } from "src/interfaces/steam/GetPlayerSummaries";
+import { SteamService } from "src/steam/steam.service";
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private userRepo: Repository<User>,
+    private steamService: SteamService
+  ) {}
 
   private readonly AVATAR_ID = /[0-9a-f]{40}/;
 
@@ -31,6 +35,12 @@ export class UserService {
     return this.userRepo.save(user);
   }
 
+  private async upsertUserBySteamId(steamid: string) {
+    const player = await this.steamService.getPlayer(steamid);
+
+    return this.upsertUserFromPlayer(player);
+  }
+
   async getUserBySteamId(steamid: string) {
     let user: User;
     try {
@@ -41,7 +51,7 @@ export class UserService {
         }
       });
     } catch {
-      throw new NotFoundException("User doesn't exist");
+      user = await this.upsertUserBySteamId(steamid);
     }
 
     return user;
