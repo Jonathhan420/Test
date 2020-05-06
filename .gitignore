@@ -7,7 +7,10 @@
 
 # utils
 cloud_sql_proxy
+
+# redis
 redis-server
+redis-cli
 dump.rdb
 
 # Logs
