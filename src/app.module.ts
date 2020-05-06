@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
 import { CommentModule } from "./comment/comment.module";
+import { SteamModule } from "./steam/steam.module";
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { CommentModule } from "./comment/comment.module";
     }),
     AuthModule,
     UserModule,
-    CommentModule
+    CommentModule,
+    SteamModule
   ],
   controllers: [],
   providers: []
