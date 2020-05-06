@@ -6,7 +6,9 @@ import {
   CreateDateColumn,
   OneToMany
 } from "typeorm";
+
 import { Comment } from "./comment.entity";
+import { Stats } from "./stats.entity";
 
 @Entity()
 export class User {
@@ -40,6 +42,12 @@ export class User {
 
   @Column()
   private: boolean;
+
+  @OneToMany(
+    () => Stats,
+    stats => stats.user
+  )
+  stats: Stats[];
 
   @CreateDateColumn({ select: false })
   created: Date;
