@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "proxy": "./cloud_sql_proxy -instances=skunkswork:us-west1:mvmhub=tcp:3306",
+    "redis": "./redis-server",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -24,6 +25,7 @@
     "@nestjs/platform-express": "^7.0.9",
     "@nestjs/typeorm": "^7.0.0",
     "cache-manager": "^3.3.0",
+    "cache-manager-redis-store": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",

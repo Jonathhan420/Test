@@ -5,8 +5,10 @@
 # secrets
 .env
 
-# cloud sql proxy
-cloud_sql_proxy*
+# utils
+cloud_sql_proxy
+redis-server
+dump.rdb
 
 # Logs
 logs
