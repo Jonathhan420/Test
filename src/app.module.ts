@@ -6,6 +6,7 @@ import { AuthModule } from "./auth/auth.module";
 import { UserModule } from "./user/user.module";
 import { CommentModule } from "./comment/comment.module";
 import { SteamModule } from "./steam/steam.module";
+import { StatsModule } from "./stats/stats.module";
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { SteamModule } from "./steam/steam.module";
     AuthModule,
     UserModule,
     CommentModule,
-    SteamModule
+    SteamModule,
+    StatsModule
   ],
   controllers: [],
   providers: []
