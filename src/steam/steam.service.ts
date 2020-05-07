@@ -53,6 +53,6 @@ export class SteamService {
       );
     }
 
-    return response;
+    return response.data;
   }
 }
