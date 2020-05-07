@@ -15,9 +15,17 @@ export class Stats {
 
   @Column({
     type: "mediumint",
-    unsigned: true
+    unsigned: true,
+    default: 0
   })
   robots: number;
+
+  @Column({
+    type: "smallint",
+    unsigned: true,
+    default: 0
+  })
+  tickets: number;
 
   @Column({
     type: "smallint",
