@@ -7,6 +7,7 @@ import { UserModule } from "./user/user.module";
 import { CommentModule } from "./comment/comment.module";
 import { SteamModule } from "./steam/steam.module";
 import { StatsModule } from "./stats/stats.module";
+import { Stats } from "./entities/stats.entity";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { StatsModule } from "./stats/stats.module";
         username: config.get<string>("DB_USER"),
         password: config.get<string>("DB_PASS"),
         autoLoadEntities: true,
+        entities: [Stats],
         database: "development",
         synchronize: true,
 

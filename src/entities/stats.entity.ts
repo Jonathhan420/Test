@@ -1,4 +1,10 @@
-import { Entity, ManyToOne, CreateDateColumn, Column } from "typeorm";
+import {
+  Entity,
+  ManyToOne,
+  CreateDateColumn,
+  Column,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { User } from "./user.entity";
 
 @Entity()
@@ -6,6 +12,9 @@ export class Stats {
   constructor(stats: Partial<Stats>) {
     Object.assign(this, stats);
   }
+
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @ManyToOne(
     () => User,
