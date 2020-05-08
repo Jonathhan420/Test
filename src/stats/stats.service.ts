@@ -43,10 +43,13 @@ export class StatsService {
   }
 
   async getStatsForUser(user: User) {
-    const inventory = await this.steamService.getInventory(user.steamid);
-    const stats = this.getStatsFromInventory(inventory);
+    try {
+      const inventory = await this.steamService.getInventory(user.steamid);
+      const stats = this.getStatsFromInventory(inventory);
 
-    user.stats = [stats];
-    return user;
+      user.stats = [stats];
+    } finally {
+      return user;
+    }
   }
 }
