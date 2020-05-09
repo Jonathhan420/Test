@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { InjectRepository, InjectConnection } from "@nestjs/typeorm";
+import { Repository, Connection } from "typeorm";
 
 import { User } from "src/entities/user.entity";
 import { Player } from "src/interfaces/steam/GetPlayerSummaries";
@@ -11,6 +11,7 @@ import { StatsService } from "src/stats/stats.service";
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
+    @InjectConnection() private database: Connection,
     private steamService: SteamService,
     private statsService: StatsService
   ) {}
@@ -58,9 +59,10 @@ export class UserService {
       user = await this.getBySteamId(player.steamid);
     } catch {
       user = await this.createNewUser(player);
+      await this.database.manager.save(user);
     }
 
-    return this.userRepo.save(user);
+    return user;
   }
 
   private async upsertUserBySteamId(steamid: string) {
@@ -73,7 +75,7 @@ export class UserService {
     let user: User;
     try {
       user = await this.userRepo.findOneOrFail({
-        relations: ["comment", "stats"],
+        relations: ["comments", "stats"],
         where: {
           steamid
         }
