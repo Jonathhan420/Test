@@ -73,7 +73,7 @@ export class UserService {
     let user: User;
     try {
       user = await this.userRepo.findOneOrFail({
-        relations: ["comment"],
+        relations: ["comment", "stats"],
         where: {
           steamid
         }
