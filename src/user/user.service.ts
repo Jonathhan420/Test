@@ -18,7 +18,18 @@ export class UserService {
   private readonly AVATAR_ID = /[0-9a-f]{40}/;
 
   private async getInternalId(steamid: string) {
-    return (await this.userRepo.findOne({ steamid })).id || null;
+    try {
+      const user = await this.userRepo.findOneOrFail({
+        select: ["id"],
+        where: {
+          steamid
+        }
+      });
+
+      return user.id;
+    } catch {
+      return;
+    }
   }
 
   private async getBySteamId(steamid: string) {
