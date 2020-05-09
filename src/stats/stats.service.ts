@@ -48,8 +48,10 @@ export class StatsService {
       const stats = this.getStatsFromInventory(inventory);
 
       user.stats = [stats];
-    } finally {
-      return user;
+    } catch {
+      user.stats = [new Stats({})];
     }
+
+    return user;
   }
 }
