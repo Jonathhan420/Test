@@ -26,6 +26,7 @@
     "@nestjs/typeorm": "^7.0.0",
     "cache-manager": "^3.3.0",
     "cache-manager-redis-store": "^2.0.0",
+    "date-fns": "^2.13.0",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",

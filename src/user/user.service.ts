@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository, InjectConnection } from "@nestjs/typeorm";
-import { Repository, Connection } from "typeorm";
+import { Repository, Connection, MoreThan } from "typeorm";
+import { subHours } from "date-fns";
 
 import { User } from "src/entities/user.entity";
 import { Player } from "src/interfaces/steam/GetPlayerSummaries";
@@ -77,7 +78,8 @@ export class UserService {
       user = await this.userRepo.findOneOrFail({
         relations: ["comments", "stats"],
         where: {
-          steamid
+          steamid,
+          updated: MoreThan(subHours(Date.now(), 6))
         }
       });
     } catch {
