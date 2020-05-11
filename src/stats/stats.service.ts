@@ -19,6 +19,10 @@ export class StatsService {
   private getStatsFromInventory(inventory: Inventory) {
     const stats = new Stats({});
 
+    stats.tickets = inventory.assets.filter(({ classid }) => {
+      return ["101785317", "73625018"].includes(classid);
+    }).length;
+
     const badges = inventory.descriptions.filter(this.isBadge);
     for (const badge of badges) {
       const name = badge.name.match(/^Operation ([a-zA-Z ]+) Badge$/)[1];
