@@ -33,7 +33,7 @@ export class UserService {
     }
   }
 
-  private async createNewUser(player: Player) {
+  async upsertUserFromPlayer(player: Player) {
     const id = await this.getInternalId(player.steamid);
 
     let user = new User({
@@ -45,12 +45,6 @@ export class UserService {
     });
 
     user = await this.statsService.getStatsForUser(user);
-
-    return user;
-  }
-
-  async upsertUserFromPlayer(player: Player) {
-    const user = await this.createNewUser(player);
 
     return this.userRepo.save(user);
   }
