@@ -26,9 +26,11 @@ import { Stats } from "./entities/stats.entity";
         entities: [Stats],
         database: "development",
         synchronize: true,
+        logging: true,
 
         ...(config.get<string>("ENV_NODE") == "production" && {
           synchronize: false,
+          logging: false,
           database: "production"
         })
       })
