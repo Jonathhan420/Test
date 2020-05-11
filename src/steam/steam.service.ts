@@ -4,11 +4,12 @@ import {
   NotFoundException,
   ServiceUnavailableException
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { AxiosResponse } from "axios";
 
 import { PlayerSummaries } from "src/interfaces/steam/GetPlayerSummaries";
-import { ConfigService } from "@nestjs/config";
 import { Inventory } from "src/interfaces/steam/Inventory";
+import { GameStats } from "src/interfaces/steam/GetUserStatsForGame";
 
 @Injectable()
 export class SteamService {
@@ -44,6 +45,27 @@ export class SteamService {
           params: {
             l: "english",
             count: 3000
+          }
+        })
+        .toPromise();
+    } catch {
+      throw new ServiceUnavailableException(
+        "Steam API is currently unavailable."
+      );
+    }
+
+    return response.data;
+  }
+
+  async getGameStats(steamid: string) {
+    let response: AxiosResponse<GameStats>;
+    try {
+      response = await this.axios
+        .get("/ISteamUserStats/GetUserStatsForGame/v0001/", {
+          params: {
+            key: this.STEAM_KEY,
+            appid: 440,
+            steamid
           }
         })
         .toPromise();
