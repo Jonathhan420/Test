@@ -62,7 +62,7 @@ export class UserService {
         relations: ["comments", "stats"],
         where: {
           steamid,
-          updated: MoreThan(subHours(new Date(), 22))
+          updated: MoreThan(subHours(new Date(), 6))
         }
       });
     } catch {
