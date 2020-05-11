@@ -18,34 +18,32 @@ export class UserService {
 
   private readonly AVATAR_ID = /[0-9a-f]{40}/;
 
-  private async getInternalId(steamid: string) {
+  private async getIdOnly(steamid: string) {
+    let user: User;
     try {
-      const user = await this.userRepo.findOneOrFail({
+      user = await this.userRepo.findOneOrFail({
         select: ["id"],
         where: {
           steamid
         }
       });
-
-      return user.id;
     } catch {
-      return;
+      user = new User({
+        steamid
+      });
     }
+
+    return user;
   }
 
   async upsertUserFromPlayer(player: Player) {
-    const id = await this.getInternalId(player.steamid);
+    let user = await this.getIdOnly(player.steamid);
 
-    let user = new User({
-      id,
-      steamid: player.steamid,
-      name: player.personaname,
-      avatar: player.avatar.match(this.AVATAR_ID)[0],
-      private: player.communityvisibilitystate !== 3
-    });
+    user.name = player.personaname;
+    user.avatar = player.avatar.match(this.AVATAR_ID)[0];
+    user.private = player.communityvisibilitystate !== 3;
 
     user = await this.statsService.getStatsForUser(user);
-
     return this.userRepo.save(user);
   }
 
