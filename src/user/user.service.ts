@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository, InjectConnection } from "@nestjs/typeorm";
-import { Repository, Connection, MoreThan } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, MoreThan } from "typeorm";
 import { subHours } from "date-fns";
 
 import { User } from "src/entities/user.entity";
@@ -12,7 +12,6 @@ import { StatsService } from "src/stats/stats.service";
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
-    @InjectConnection() private database: Connection,
     private steamService: SteamService,
     private statsService: StatsService
   ) {}
@@ -34,10 +33,6 @@ export class UserService {
     }
   }
 
-  private async getBySteamId(steamid: string) {
-    return this.userRepo.findOneOrFail({ steamid });
-  }
-
   private async createNewUser(player: Player) {
     const id = await this.getInternalId(player.steamid);
 
@@ -55,18 +50,12 @@ export class UserService {
   }
 
   async upsertUserFromPlayer(player: Player) {
-    let user: User;
-    try {
-      user = await this.getBySteamId(player.steamid);
-    } catch {
-      user = await this.createNewUser(player);
-      await this.database.manager.save(user);
-    }
+    const user = await this.createNewUser(player);
 
-    return user;
+    return this.userRepo.save(user);
   }
 
-  private async upsertUserBySteamId(steamid: string) {
+  private async createUserBySteamid(steamid: string) {
     const player = await this.steamService.getPlayer(steamid);
 
     return this.upsertUserFromPlayer(player);
@@ -79,11 +68,11 @@ export class UserService {
         relations: ["comments", "stats"],
         where: {
           steamid,
-          updated: MoreThan(subHours(Date.now(), 6))
+          updated: MoreThan(subHours(new Date(), 22))
         }
       });
     } catch {
-      user = await this.upsertUserBySteamId(steamid);
+      user = await this.createUserBySteamid(steamid);
     }
 
     return user;
