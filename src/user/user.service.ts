@@ -40,6 +40,7 @@ export class UserService {
     let user = await this.getIdOnly(player.steamid);
 
     user.name = player.personaname;
+    user.steamid = player.steamid;
     user.avatar = player.avatar.match(this.AVATAR_ID)[0];
     user.private = player.communityvisibilitystate !== 3;
 

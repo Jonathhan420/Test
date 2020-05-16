@@ -2,7 +2,8 @@ import {
   Injectable,
   HttpService,
   NotFoundException,
-  ServiceUnavailableException
+  ServiceUnavailableException,
+  ForbiddenException
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AxiosResponse } from "axios";
@@ -48,7 +49,11 @@ export class SteamService {
           }
         })
         .toPromise();
-    } catch {
+    } catch (error) {
+      if (error.response.status === 403) {
+        throw new ForbiddenException("Steam profile is set to private.");
+      }
+
       throw new ServiceUnavailableException(
         "Steam API is currently unavailable."
       );

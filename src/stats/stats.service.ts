@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, ForbiddenException } from "@nestjs/common";
 
 import {
   Inventory,
@@ -52,7 +52,12 @@ export class StatsService {
       const stats = this.getStatsFromInventory(inventory);
 
       user.stats = [stats];
-    } catch {
+    } catch (error) {
+      if (error instanceof ForbiddenException) {
+        user.private = true;
+      } else {
+        user.error = true;
+      }
       user.stats = [new Stats({})];
     }
 

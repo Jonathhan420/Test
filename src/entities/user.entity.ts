@@ -55,4 +55,6 @@ export class User {
 
   @UpdateDateColumn()
   updated: Date;
+
+  error: boolean;
 }
