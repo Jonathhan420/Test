@@ -66,7 +66,13 @@ export class UserService {
         }
       });
     } catch {
-      user = await this.createUserBySteamid(steamid);
+      await this.createUserBySteamid(steamid);
+      return this.userRepo.findOneOrFail({
+        relations: ["comments", "stats"],
+        where: {
+          steamid
+        }
+      });
     }
 
     return user;

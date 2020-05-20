@@ -55,7 +55,7 @@ export class StatsService {
   }
 
   async getStatsForUser(user: User) {
-    let statsFinal: Stats;
+    let statsFinal = new Stats({});
     try {
       const inventory = await this.steamService.getInventory(user.steamid);
       statsFinal = this.getStatsFromInventory(inventory);
@@ -71,7 +71,7 @@ export class StatsService {
       const gameStats = await this.steamService.getGameStats(user.steamid);
       statsFinal = this.assignRobotsToStats(gameStats, statsFinal);
     } catch {
-      user.error = true;
+      user.private = true;
     }
 
     user.stats = [statsFinal];
