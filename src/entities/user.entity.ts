@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   OneToMany
 } from "typeorm";
+import { randomBytes } from "crypto";
 
 import { Comment } from "./comment.entity";
 import { Stats } from "./stats.entity";
@@ -14,6 +15,10 @@ import { Stats } from "./stats.entity";
 export class User {
   constructor(user: Partial<User>) {
     Object.assign(this, user);
+  }
+
+  randomMagic() {
+    this.magic = randomBytes(4).toString("hex");
   }
 
   @PrimaryGeneratedColumn("uuid")
@@ -49,6 +54,9 @@ export class User {
     { cascade: true }
   )
   stats: Stats[];
+
+  @Column({ length: 8, default: "magicstr" })
+  magic: string;
 
   @CreateDateColumn({ select: false })
   created: Date;

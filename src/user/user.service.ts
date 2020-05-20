@@ -43,6 +43,7 @@ export class UserService {
     user.steamid = player.steamid;
     user.avatar = player.avatar.match(this.AVATAR_ID)[0];
     user.private = player.communityvisibilitystate !== 3;
+    user.randomMagic();
 
     user = await this.statsService.getStatsForUser(user);
     return this.userRepo.save(user);
