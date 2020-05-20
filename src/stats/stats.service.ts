@@ -8,6 +8,7 @@ import { Stats } from "src/entities/stats.entity";
 import { TourCode, Missions, Tour } from "./Tours";
 import { User } from "src/entities/user.entity";
 import { SteamService } from "src/steam/steam.service";
+import { GameStats } from "src/interfaces/steam/GetUserStatsForGame";
 
 @Injectable()
 export class StatsService {
@@ -46,21 +47,34 @@ export class StatsService {
     return stats;
   }
 
+  private assignRobotsToStats(gameStats: GameStats, stats: Stats) {
+    stats.robots =
+      gameStats.playerstats.stats["TF_MVM_KILL_ROBOT_MEGA_GRIND_STAT"].value;
+
+    return stats;
+  }
+
   async getStatsForUser(user: User) {
+    let statsFinal: Stats;
     try {
       const inventory = await this.steamService.getInventory(user.steamid);
-      const stats = this.getStatsFromInventory(inventory);
-
-      user.stats = [stats];
+      statsFinal = this.getStatsFromInventory(inventory);
     } catch (error) {
       if (error instanceof ForbiddenException) {
         user.private = true;
       } else {
         user.error = true;
       }
-      user.stats = [new Stats({})];
     }
 
+    try {
+      const gameStats = await this.steamService.getGameStats(user.steamid);
+      statsFinal = this.assignRobotsToStats(gameStats, statsFinal);
+    } catch {
+      user.error = true;
+    }
+
+    user.stats = [statsFinal];
     return user;
   }
 }
