@@ -55,7 +55,17 @@ export class UserService {
     return this.upsertUserFromPlayer(player);
   }
 
-  async getUserBySteamId(steamid: string) {
+  async getUserBySteamId(steamid: string, refresh = false) {
+    if (refresh) {
+      await this.createUserBySteamid(steamid);
+      return this.userRepo.findOneOrFail({
+        relations: ["comments", "stats"],
+        where: {
+          steamid
+        }
+      });
+    }
+
     let user: User;
     try {
       user = await this.userRepo.findOneOrFail({
