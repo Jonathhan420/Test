@@ -50,8 +50,7 @@ export class User {
 
   @OneToMany(
     () => Stats,
-    stats => stats.user,
-    { cascade: true }
+    stats => stats.user
   )
   stats: Stats[];
 

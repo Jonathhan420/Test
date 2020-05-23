@@ -9,10 +9,15 @@ import { TourCode, Missions, Tour } from "./Tours";
 import { User } from "src/entities/user.entity";
 import { SteamService } from "src/steam/steam.service";
 import { GameStats } from "src/interfaces/steam/GetUserStatsForGame";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class StatsService {
-  constructor(private steamService: SteamService) {}
+  constructor(
+    private steamService: SteamService,
+    @InjectRepository(Stats) private statsRepo: Repository<Stats>
+  ) {}
   private isBadge({ name }: InventoryDescription) {
     return name.startsWith("Operation ");
   }
@@ -74,7 +79,8 @@ export class StatsService {
       user.private = true;
     }
 
-    user.stats = [statsFinal];
+    statsFinal.user = user;
+    await this.statsRepo.save(statsFinal);
     return user;
   }
 }

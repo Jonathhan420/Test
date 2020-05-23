@@ -76,13 +76,15 @@ export class UserService {
         }
       });
     } catch {
-      await this.createUserBySteamid(steamid);
-      return this.userRepo.findOneOrFail({
+      const { error } = await this.createUserBySteamid(steamid);
+      user = await this.userRepo.findOneOrFail({
         relations: ["comments", "stats"],
         where: {
           steamid
         }
       });
+
+      user.error = error;
     }
 
     return user;
