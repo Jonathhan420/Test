@@ -13,7 +13,7 @@ export class Stats {
     Object.assign(this, stats);
   }
 
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   id: string;
 
   @ManyToOne(
