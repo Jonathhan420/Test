@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException } from "@nestjs/common";
+import { Injectable, ForbiddenException, Logger } from "@nestjs/common";
 
 import {
   Inventory,
@@ -9,15 +9,21 @@ import { TourCode, Missions, Tour } from "./Tours";
 import { User } from "src/entities/user.entity";
 import { SteamService } from "src/steam/steam.service";
 import { GameStats } from "src/interfaces/steam/GetUserStatsForGame";
-import { Repository } from "typeorm";
+import { Repository, LessThan } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { subDays } from "date-fns";
+import { CronExpression, Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class StatsService {
   constructor(
+    @InjectRepository(Stats) private statsRepo: Repository<Stats>,
     private steamService: SteamService,
-    @InjectRepository(Stats) private statsRepo: Repository<Stats>
-  ) {}
+    private logger: Logger
+  ) {
+    this.logger.setContext("StatsModule");
+  }
+
   private isBadge({ name }: InventoryDescription) {
     return name.startsWith("Operation ");
   }
@@ -82,5 +88,20 @@ export class StatsService {
     statsFinal.user = user;
     await this.statsRepo.save(statsFinal);
     return user;
+  }
+
+  @Cron(CronExpression.EVERY_5_MINUTES)
+  async purge() {
+    this.logger.log("Purging old & duplicate stats");
+
+    const removeDupeDay =
+      "DELETE FROM stats WHERE id NOT IN (SELECT to_save FROM (SELECT MAX(id) AS to_save FROM stats GROUP BY userId, DATE(time)) tmp)";
+
+    return Promise.all([
+      this.statsRepo.query(removeDupeDay),
+      this.statsRepo.delete({
+        time: LessThan(subDays(new Date(), 31))
+      })
+    ]);
   }
 }
