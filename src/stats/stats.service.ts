@@ -18,6 +18,7 @@ import { CronExpression, Cron } from "@nestjs/schedule";
 export class StatsService {
   constructor(
     @InjectRepository(Stats) private statsRepo: Repository<Stats>,
+    @InjectRepository(User) private userRepo: Repository<User>,
     private steamService: SteamService,
     private logger: Logger
   ) {
@@ -67,10 +68,13 @@ export class StatsService {
 
   async getStatsForUser(user: User) {
     let statsFinal = new Stats({});
+    let problem = false;
+
     try {
       const inventory = await this.steamService.getInventory(user.steamid);
       statsFinal = this.getStatsFromInventory(inventory);
     } catch (error) {
+      problem = true;
       if (error instanceof ForbiddenException) {
         user.private = true;
       } else {
@@ -82,11 +86,14 @@ export class StatsService {
       const gameStats = await this.steamService.getGameStats(user.steamid);
       statsFinal = this.assignRobotsToStats(gameStats, statsFinal);
     } catch {
+      problem = true;
       user.private = true;
     }
 
     statsFinal.user = user;
-    await this.statsRepo.save(statsFinal);
+    if (!problem) {
+      await this.statsRepo.save(statsFinal);
+    }
     return user;
   }
 
@@ -103,5 +110,34 @@ export class StatsService {
         time: LessThan(subDays(new Date(), 31))
       })
     ]);
+  }
+
+  @Cron(CronExpression.EVERY_10_MINUTES)
+  async autoQuery() {
+    this.logger.log("Updating users with more than 25 tours");
+
+    const raw = await this.statsRepo
+      .createQueryBuilder()
+      .select("userId")
+      .groupBy("userId")
+      .having("MAX(time) < (NOW() - INTERVAL 24 HOUR)")
+      .andHaving(
+        "MAX(tours_ST + tours_OS + tours_GG + tours_ME + tours_TC) >= 25"
+      )
+      .getRawMany();
+
+    const users = await this.userRepo.findByIds(
+      raw.map(({ userId }) => userId)
+    );
+
+    const promises: Promise<any>[] = [];
+    for (const user of users) {
+      const promise = this.getStatsForUser(user);
+      promise.catch(e => e);
+
+      promises.push(promise);
+    }
+
+    return Promise.all(promises);
   }
 }
