@@ -4,6 +4,10 @@ import { User } from "./user.entity";
 
 @Entity()
 export class Note {
+  constructor(note: Partial<Note>) {
+    Object.assign(this, note);
+  }
+
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
