@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 
 import { Comment } from "./comment.entity";
+import { Note } from "./note.entity";
 import { Stats } from "./stats.entity";
 
 @Entity()
@@ -35,6 +36,18 @@ export class User {
     comment => comment.author
   )
   authoredComments: Comment[];
+
+  @OneToMany(
+    () => Note,
+    note => note.location
+  )
+  notes: Note[];
+
+  @OneToMany(
+    () => Note,
+    note => note.author
+  )
+  postedNotes: Note[];
 
   @Column({ length: 17 })
   steamid: string;
