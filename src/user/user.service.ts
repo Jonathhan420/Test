@@ -65,13 +65,16 @@ export class UserService {
     let query = builder
       .where("user.steamid = :steamid", { steamid })
       .leftJoinAndSelect("user.stats", "stats")
-      .leftJoinAndSelect("user.comments", "comments");
+      .leftJoinAndSelect("user.comments", "comments")
+      .leftJoinAndSelect("comments.author", "commentsAuthor");
 
     if (steamid === requester) {
-      query = query.leftJoinAndSelect(
-        "user.authoredComments",
-        "authoredComments"
-      );
+      query = query
+        .leftJoinAndSelect("user.authoredComments", "authoredComments")
+        .leftJoinAndSelect(
+          "authoredComments.location",
+          "authoredCommentsLocation"
+        );
     }
 
     if (recent) {
