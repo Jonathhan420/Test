@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "./auth/auth.module";
 import { CommentModule } from "./comment/comment.module";
 import { Stats } from "./entities/stats.entity";
+import { NoteModule } from "./note/note.module";
 import { StatsModule } from "./stats/stats.module";
 import { SteamModule } from "./steam/steam.module";
 import { UserModule } from "./user/user.module";
@@ -39,7 +40,8 @@ import { UserModule } from "./user/user.module";
     UserModule,
     CommentModule,
     SteamModule,
-    StatsModule
+    StatsModule,
+    NoteModule
   ],
   controllers: [],
   providers: []
