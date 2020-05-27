@@ -44,8 +44,9 @@ export class UserService {
     user.private = player.communityvisibilitystate !== 3;
     user.randomMagic();
 
+    await this.userRepo.save(user);
     user = await this.statsService.getStatsForUser(user);
-    return this.userRepo.save(user);
+    return user;
   }
 
   private async createUserBySteamid(steamid: string) {
