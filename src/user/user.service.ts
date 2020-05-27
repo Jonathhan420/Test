@@ -99,7 +99,7 @@ export class UserService {
 
     let user: User;
     try {
-      user = await this.find(steamid, null, true);
+      user = await this.find(steamid, requester, true);
     } catch {
       const { error } = await this.createUserBySteamid(steamid);
       user = await this.find(steamid, requester);
