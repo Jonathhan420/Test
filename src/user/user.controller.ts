@@ -1,4 +1,5 @@
 import { User } from "src/decorators/user.decorator";
+import { Payload } from "src/interfaces/jwt/Payload";
 
 import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
@@ -22,11 +23,11 @@ export class UserController {
   async getAuthenticatedProfile(
     @Param("steamid") steamid: string,
     @Query("refresh") refresh: string,
-    @User() requester: string
+    @User() requester: Payload
   ) {
     return this.userService.getUserBySteamId(
       steamid,
-      requester,
+      requester.steamid,
       refresh === "true"
     );
   }
