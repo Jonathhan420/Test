@@ -1,4 +1,4 @@
-import { Module, HttpModule } from "@nestjs/common";
+import { HttpModule, Module } from "@nestjs/common";
 
 import { SteamService } from "./steam.service";
 

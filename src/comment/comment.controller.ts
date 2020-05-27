@@ -1,20 +1,21 @@
+import { User } from "src/decorators/user.decorator";
+import { Payload } from "src/interfaces/jwt/Payload";
+
 import {
-  Controller,
-  UseGuards,
-  Post,
   Body,
-  Put,
+  Controller,
+  Delete,
   Param,
-  Delete
+  Post,
+  Put,
+  UseGuards
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 
 import { CommentService } from "./comment.service";
-import { NewCommentDto } from "./dto/new-comment.dto";
-import { User } from "src/decorators/user.decorator";
-import { Payload } from "src/interfaces/jwt/Payload";
-import { EditCommentDto } from "./dto/edit-comment.dto";
 import { DeleteCommentDto } from "./dto/delete-comment.dto";
+import { EditCommentDto } from "./dto/edit-comment.dto";
+import { NewCommentDto } from "./dto/new-comment.dto";
 
 @Controller("comment")
 @UseGuards(AuthGuard("jwt"))

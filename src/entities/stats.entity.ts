@@ -1,10 +1,11 @@
 import {
+  Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
-  CreateDateColumn,
-  Column,
   PrimaryGeneratedColumn
 } from "typeorm";
+
 import { User } from "./user.entity";
 
 @Entity()

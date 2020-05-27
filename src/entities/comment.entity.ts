@@ -1,11 +1,12 @@
 import {
-  Entity,
   Column,
-  ManyToOne,
-  UpdateDateColumn,
   CreateDateColumn,
-  PrimaryGeneratedColumn
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
 } from "typeorm";
+
 import { User } from "./user.entity";
 
 @Entity()

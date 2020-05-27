@@ -1,16 +1,16 @@
+import { AxiosResponse } from "axios";
+import { PlayerSummaries } from "src/interfaces/steam/GetPlayerSummaries";
+import { GameStats } from "src/interfaces/steam/GetUserStatsForGame";
+import { Inventory } from "src/interfaces/steam/Inventory";
+
 import {
-  Injectable,
+  ForbiddenException,
   HttpService,
+  Injectable,
   NotFoundException,
-  ServiceUnavailableException,
-  ForbiddenException
+  ServiceUnavailableException
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { AxiosResponse } from "axios";
-
-import { PlayerSummaries } from "src/interfaces/steam/GetPlayerSummaries";
-import { Inventory } from "src/interfaces/steam/Inventory";
-import { GameStats } from "src/interfaces/steam/GetUserStatsForGame";
 
 @Injectable()
 export class SteamService {

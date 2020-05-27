@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-
 import { User } from "src/entities/user.entity";
 import { Player } from "src/interfaces/steam/GetPlayerSummaries";
-import { SteamService } from "src/steam/steam.service";
 import { StatsService } from "src/stats/stats.service";
+import { SteamService } from "src/steam/steam.service";
+import { Repository } from "typeorm";
+
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class UserService {

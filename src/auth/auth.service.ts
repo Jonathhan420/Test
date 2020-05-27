@@ -1,11 +1,11 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
 import { sign } from "jsonwebtoken";
-
-import { Player } from "src/interfaces/steam/GetPlayerSummaries";
 import { Payload } from "src/interfaces/jwt/Payload";
+import { Player } from "src/interfaces/steam/GetPlayerSummaries";
 import { UserService } from "src/user/user.service";
+
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {

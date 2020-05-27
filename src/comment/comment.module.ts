@@ -1,10 +1,11 @@
+import { JwtStrategy } from "src/auth/jwt.strategy";
+import { Comment } from "src/entities/comment.entity";
+
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { Comment } from "src/entities/comment.entity";
-import { CommentService } from "./comment.service";
 import { CommentController } from "./comment.controller";
-import { JwtStrategy } from "src/auth/jwt.strategy";
+import { CommentService } from "./comment.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Comment])],

@@ -1,7 +1,9 @@
-import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
-import { UserService } from "./user.service";
-import { AuthGuard } from "@nestjs/passport";
 import { User } from "src/decorators/user.decorator";
+
+import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+
+import { UserService } from "./user.service";
 
 @Controller("user")
 export class UserController {

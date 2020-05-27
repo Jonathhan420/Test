@@ -1,8 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-steam";
-import { ConfigService } from "@nestjs/config";
 import { Player } from "src/interfaces/steam/GetPlayerSummaries";
+
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PassportStrategy } from "@nestjs/passport";
+
 import { AuthService } from "./auth.service";
 
 @Injectable()

@@ -1,17 +1,18 @@
+import { Comment } from "src/entities/comment.entity";
+import { User } from "src/entities/user.entity";
+import { Repository } from "typeorm";
+
 import {
-  Injectable,
   BadRequestException,
+  Injectable,
   NotFoundException,
   UnauthorizedException
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
 
-import { NewCommentDto } from "./dto/new-comment.dto";
-import { Comment } from "src/entities/comment.entity";
-import { User } from "src/entities/user.entity";
-import { EditCommentDto } from "./dto/edit-comment.dto";
 import { DeleteCommentDto } from "./dto/delete-comment.dto";
+import { EditCommentDto } from "./dto/edit-comment.dto";
+import { NewCommentDto } from "./dto/new-comment.dto";
 
 @Injectable()
 export class CommentService {

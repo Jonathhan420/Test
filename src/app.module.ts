@@ -3,11 +3,11 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AuthModule } from "./auth/auth.module";
-import { UserModule } from "./user/user.module";
 import { CommentModule } from "./comment/comment.module";
-import { SteamModule } from "./steam/steam.module";
-import { StatsModule } from "./stats/stats.module";
 import { Stats } from "./entities/stats.entity";
+import { StatsModule } from "./stats/stats.module";
+import { SteamModule } from "./steam/steam.module";
+import { UserModule } from "./user/user.module";
 
 @Module({
   imports: [

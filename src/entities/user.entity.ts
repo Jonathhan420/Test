@@ -1,12 +1,12 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  UpdateDateColumn,
-  CreateDateColumn,
-  OneToMany
-} from "typeorm";
 import { randomBytes } from "crypto";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from "typeorm";
 
 import { Comment } from "./comment.entity";
 import { Stats } from "./stats.entity";
