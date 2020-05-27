@@ -1,5 +1,7 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
+import { AuthGuard } from "@nestjs/passport";
+import { User } from "src/decorators/user.decorator";
 
 @Controller("user")
 export class UserController {
@@ -10,6 +12,20 @@ export class UserController {
     @Param("steamid") steamid: string,
     @Query("refresh") refresh: string
   ) {
-    return this.userService.getUserBySteamId(steamid, refresh === "true");
+    return this.userService.getUserBySteamId(steamid, null, refresh === "true");
+  }
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get(":steamid/authenticated")
+  async getAuthenticatedProfile(
+    @Param("steamid") steamid: string,
+    @Query("refresh") refresh: string,
+    @User() requester: string
+  ) {
+    return this.userService.getUserBySteamId(
+      steamid,
+      requester,
+      refresh === "true"
+    );
   }
 }

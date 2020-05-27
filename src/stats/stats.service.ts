@@ -68,13 +68,13 @@ export class StatsService {
 
   async getStatsForUser(user: User) {
     let statsFinal = new Stats({});
-    let problem = false;
+    let problem = 0;
 
     try {
       const inventory = await this.steamService.getInventory(user.steamid);
       statsFinal = this.getStatsFromInventory(inventory);
     } catch (error) {
-      problem = true;
+      problem += 1;
       if (error instanceof ForbiddenException) {
         user.private = true;
       } else {
@@ -86,12 +86,13 @@ export class StatsService {
       const gameStats = await this.steamService.getGameStats(user.steamid);
       statsFinal = this.assignRobotsToStats(gameStats, statsFinal);
     } catch {
-      problem = true;
+      problem += 1;
       user.private = true;
     }
 
     statsFinal.user = user;
-    if (!problem) {
+
+    if (problem <= 1) {
       await this.statsRepo.save(statsFinal);
     }
     return user;

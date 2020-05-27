@@ -1,7 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, MoreThan } from "typeorm";
-import { subHours } from "date-fns";
+import { Repository } from "typeorm";
 
 import { User } from "src/entities/user.entity";
 import { Player } from "src/interfaces/steam/GetPlayerSummaries";
@@ -55,34 +54,54 @@ export class UserService {
     return this.upsertUserFromPlayer(player);
   }
 
-  async getUserBySteamId(steamid: string, refresh = false) {
+  private async find(
+    steamid: string,
+    requester: string = null,
+    recent = false
+  ) {
+    const builder = this.userRepo.createQueryBuilder("user");
+
+    let query = builder
+      .where("user.steamid = :steamid", { steamid })
+      .leftJoinAndSelect("user.stats", "stats")
+      .leftJoinAndSelect("user.comments", "comments");
+
+    if (steamid === requester) {
+      query = query.leftJoinAndSelect(
+        "user.authoredComments",
+        "authoredComments"
+      );
+    }
+
+    if (recent) {
+      query = query.andWhere("user.updated >= NOW() - INTERVAl 6 HOUR");
+    }
+
+    const user = await query.getOne();
+
+    if (!user)
+      throw new NotFoundException(
+        "User couldn't be found with specified options."
+      );
+    return user;
+  }
+
+  async getUserBySteamId(
+    steamid: string,
+    requester: string = null,
+    refresh = false
+  ) {
     if (refresh) {
       await this.createUserBySteamid(steamid);
-      return this.userRepo.findOneOrFail({
-        relations: ["comments", "stats"],
-        where: {
-          steamid
-        }
-      });
+      return this.find(steamid, requester);
     }
 
     let user: User;
     try {
-      user = await this.userRepo.findOneOrFail({
-        relations: ["comments", "stats"],
-        where: {
-          steamid,
-          updated: MoreThan(subHours(new Date(), 6))
-        }
-      });
+      user = await this.find(steamid, null, true);
     } catch {
       const { error } = await this.createUserBySteamid(steamid);
-      user = await this.userRepo.findOneOrFail({
-        relations: ["comments", "stats"],
-        where: {
-          steamid
-        }
-      });
+      user = await this.find(steamid, requester);
 
       user.error = error;
     }
