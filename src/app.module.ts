@@ -4,7 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AuthModule } from "./auth/auth.module";
 import { CommentModule } from "./comment/comment.module";
-import { Stats } from "./entities/stats.entity";
+import { LeaderboardModule } from "./leaderboard/leaderboard.module";
 import { NoteModule } from "./note/note.module";
 import { StatsModule } from "./stats/stats.module";
 import { SteamModule } from "./steam/steam.module";
@@ -24,7 +24,7 @@ import { UserModule } from "./user/user.module";
         username: config.get<string>("DB_USER"),
         password: config.get<string>("DB_PASS"),
         autoLoadEntities: true,
-        entities: [Stats],
+        entities: [],
         database: "development",
         synchronize: true,
         logging: true,
@@ -41,7 +41,8 @@ import { UserModule } from "./user/user.module";
     CommentModule,
     SteamModule,
     StatsModule,
-    NoteModule
+    NoteModule,
+    LeaderboardModule
   ],
   controllers: [],
   providers: []
